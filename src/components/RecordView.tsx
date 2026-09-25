@@ -1,7 +1,7 @@
 import { BRIER_BASELINE, BUCKET_EDGES } from '../config/constants'
 import type { Summary } from '../lib/calibration'
 import { bucketize } from '../lib/calibration'
-import { formatDay } from '../lib/date'
+import { dayOf, formatDay } from '../lib/date'
 import type { Prediction } from '../types'
 import { CalibrationChart } from './CalibrationChart'
 
@@ -78,7 +78,7 @@ export function RecordView({ predictions, summary, justResolvedId, onExport, onI
                 <span className="history-confidence">{prediction.confidence}%</span>
                 <span className="history-statement">{prediction.statement}</span>
                 <span className="history-note">
-                  {prediction.resolvedAt ? formatDay(prediction.resolvedAt.slice(0, 10)) : ''}
+                  {prediction.resolvedAt ? formatDay(dayOf(prediction.resolvedAt)) : ''}
                 </span>
               </div>
             )

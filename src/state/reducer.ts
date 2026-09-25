@@ -21,7 +21,7 @@ export type Action =
   | { type: 'hydrate'; predictions: Prediction[] }
   | { type: 'add'; prediction: Prediction }
   | { type: 'resolve'; id: string; outcome: Outcome; note: string | null; at: string }
-  | { type: 'postpone'; id: string }
+  | { type: 'postpone'; id: string; today: string }
   | { type: 'clearHighlight' }
   | { type: 'showBadge' }
   | { type: 'clearBadge' }
@@ -59,13 +59,18 @@ export function reducer(state: State, action: Action): State {
     }
 
     case 'postpone':
+      // 元の期限から延ばすと、期限を大きく過ぎたものはまだ判定待ちに残り、
+      // 押し直すたびに延期回数だけが増える。今日を起点にする
       return {
         ...state,
         predictions: state.predictions.map((p) =>
           p.id === action.id
             ? {
                 ...p,
-                resolveAt: addDays(p.resolveAt, POSTPONE_DAYS),
+                resolveAt: addDays(
+                  p.resolveAt > action.today ? p.resolveAt : action.today,
+                  POSTPONE_DAYS,
+                ),
                 postponedCount: p.postponedCount + 1,
               }
             : p,
