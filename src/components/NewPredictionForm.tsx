@@ -92,8 +92,9 @@ export function NewPredictionForm({ today, onSubmit, onCancel }: Props) {
         </button>
       </div>
       <p className="confidence-readout">
-        <strong>{confidence}%</strong> の確信 ─ 10回同じことを言ったら{Math.round(confidence / 10)}
-        回くらい当たる、という意味です
+        {/* 10回あたりで言うと95%が「10回中10回」に丸まり、確実に見えてしまう */}
+        <strong>{confidence}%</strong> の確信 ─ 100回同じことを言ったら{confidence}回当たり、
+        {100 - confidence}回外れる、という意味です
       </p>
 
       <div className="form-label">いつ答え合わせするか</div>

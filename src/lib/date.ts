@@ -7,6 +7,14 @@ export function toDayString(date: Date): string {
   return `${y}-${m}-${d}`
 }
 
+/**
+ * ISO8601 日時を、端末のタイムゾーンでの YYYY-MM-DD にする。
+ * 先頭10文字を切り出すと UTC の日付になり、日本では朝9時前の判定が前日に見える
+ */
+export function dayOf(isoDateTime: string): string {
+  return toDayString(new Date(isoDateTime))
+}
+
 export function parseDay(day: string): Date {
   const [y, m, d] = day.split('-').map(Number)
   return new Date(y, m - 1, d)

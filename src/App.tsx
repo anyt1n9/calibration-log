@@ -133,7 +133,7 @@ export function App() {
           today={today}
           onAdd={addPrediction}
           onResolve={handleResolve}
-          onPostpone={(id) => dispatch({ type: 'postpone', id })}
+          onPostpone={(id) => dispatch({ type: 'postpone', id, today })}
         />
       ) : (
         <RecordView
