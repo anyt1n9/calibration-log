@@ -4,6 +4,7 @@ import { daysBetween, describeDeadline } from '../lib/date'
 import type { Outcome, Prediction } from '../types'
 import { DueCard } from './DueCard'
 import { HeadlineStat } from './HeadlineStat'
+import { InstallHint } from './InstallHint'
 import { NewPredictionForm } from './NewPredictionForm'
 
 type Props = {
@@ -85,6 +86,9 @@ export function HomeView({ predictions, summary, today, onAdd, onResolve, onPost
           </div>
         )}
       </section>
+
+      {/* 判定待ちや入力の邪魔をしないよう、最下段に置く */}
+      <InstallHint hasRecords={predictions.length > 0} />
     </div>
   )
 }

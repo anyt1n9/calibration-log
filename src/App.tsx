@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { HomeView } from './components/HomeView'
 import { RecordView } from './components/RecordView'
-import { REVEAL_MS } from './config/constants'
+import { REVEAL_MS, STORAGE_KEY, THEME_KEY } from './config/constants'
 import { summarize } from './lib/calibration'
 import { addDays, toDayString } from './lib/date'
 import { makeSamplePredictions } from './lib/sample'
 import { initialState, reducer } from './state/reducer'
-import { load, parseImported, save, toExportBlob } from './state/storage'
+import {
+  load,
+  parseImported,
+  parseStored,
+  readSetting,
+  save,
+  toExportBlob,
+  writeSetting,
+} from './state/storage'
 import type { Outcome, Prediction } from './types'
 
 type Tab = 'home' | 'record'
 type Theme = 'system' | 'light' | 'dark'
-
-const THEME_KEY = 'calibration-log/theme'
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -22,8 +28,21 @@ export function App() {
   // 起動時の読み込み
   useEffect(() => {
     dispatch({ type: 'hydrate', predictions: load() })
-    const storedTheme = localStorage.getItem(THEME_KEY) as Theme | null
-    if (storedTheme) setTheme(storedTheme)
+    const storedTheme = readSetting(THEME_KEY)
+    if (storedTheme === 'light' || storedTheme === 'dark') setTheme(storedTheme)
+  }, [])
+
+  // 別のタブで記録が変わったら取り込む。
+  // 取り込まずにいると、こちらで次に保存した瞬間に、あちらの変更を古い全件で上書きしてしまう
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) return
+      // 壊れた値や消去は取り込まない。空配列で手元の記録まで消さないため
+      const predictions = parseStored(event.newValue)
+      if (predictions) dispatch({ type: 'hydrate', predictions })
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
   // 変更のたびに保存。読み込みが終わるまでは書かない。
@@ -75,9 +94,10 @@ export function App() {
 
   const handleImport = async (file: File) => {
     try {
-      const predictions = parseImported(await file.text())
+      const { predictions, skipped } = parseImported(await file.text())
+      const skippedNote = skipped > 0 ? `（壊れていた${skipped}件は読み込みません）` : ''
       const ok = window.confirm(
-        `${predictions.length}件を読み込みます。いま入っている${state.predictions.length}件は置き換えられます。よろしいですか。`,
+        `${predictions.length}件を読み込みます${skippedNote}。いま入っている${state.predictions.length}件は置き換えられます。よろしいですか。`,
       )
       if (ok) dispatch({ type: 'replaceAll', predictions })
     } catch (error) {
@@ -97,7 +117,7 @@ export function App() {
           onClick={() => {
             const next: Theme = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system'
             setTheme(next)
-            localStorage.setItem(THEME_KEY, next)
+            writeSetting(THEME_KEY, next)
           }}
         >
           {theme === 'system' ? '表示: 自動' : theme === 'light' ? '表示: 明' : '表示: 暗'}
