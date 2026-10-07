@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- アプリアイコン。完璧な予測者の線（破線）と、誤差帯つきの点ひとつ -->
+  <rect width="512" height="512" fill="#f6f6f4"/>
+  <line x1="96" y1="416" x2="416" y2="96" stroke="#b8b4aa" stroke-width="18" stroke-dasharray="34 26" stroke-linecap="round"/>
+  <line x1="336" y1="196" x2="336" y2="372" stroke="#9a958c" stroke-width="18" stroke-linecap="round"/>
+  <line x1="306" y1="196" x2="366" y2="196" stroke="#9a958c" stroke-width="14" stroke-linecap="round"/>
+  <line x1="306" y1="372" x2="366" y2="372" stroke="#9a958c" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="336" cy="284" r="38" fill="#22201c"/>
+</svg>

@@ -5,6 +5,10 @@
 
 export const STORAGE_KEY = 'calibration-log/v1'
 export const SCHEMA_VERSION = 1
+/** 表示テーマ（自動 / 明 / 暗） */
+export const THEME_KEY = 'calibration-log/theme'
+/** 「ホーム画面に追加」の案内を閉じたか */
+export const INSTALL_HINT_KEY = 'calibration-log/install-hint-dismissed'
 
 // --- 確信度の入力（仕様 3-1, 3-2） ---
 /** プリセット。スライダーにしない。6択で一度立ち止まらせる */

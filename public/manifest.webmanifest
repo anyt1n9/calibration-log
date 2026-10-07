@@ -1,0 +1,16 @@
+{
+  "name": "予測の答え合わせ",
+  "short_name": "答え合わせ",
+  "description": "予測に確率を添えて記録し、確信度と実際の的中率のズレを見る",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f6f4",
+  "theme_color": "#f6f6f4",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
